@@ -1,5 +1,5 @@
 #include "pins.h"
-#include "MusicPlayer.h"
+#include "RTTTLPlayer.h"
 #include "songs.h"
 #include "Button.h"
 #include "LedController.h"
@@ -14,7 +14,7 @@ LedController gLed;
 LedController bLed;
 
 Button backButton(BUTTON_BACK_PIN);
-MusicPlayer player(BUZZER_PIN);
+RTTTLPlayer player(BUZZER_PIN);
 
 void setup() {
   Serial.begin(9600);
@@ -38,7 +38,6 @@ void setup() {
 }
 
 int song_idx = 0;
-Song song = ALL_SONGS[song_idx];
 
 bool wasPlaying = false;
 
@@ -55,7 +54,7 @@ void loop() {
     wasPlaying = player.isPlaying();
     if (player.isPlaying()) {
       player.stop();
-      setRGBFromPitch(REST);
+      setRGBFromPitch(0);
     }
   }
 
@@ -73,7 +72,8 @@ void loop() {
   if (player.isPlaying())
   {
     // Handle tempo tuning with potentiometer
-    int tempo = map(potentiometerValue, 0, 4095, song.tempo / 2, song.tempo * 2);
+    int base = player.getBaseTempo();
+    int tempo = map(potentiometerValue, 0, 4095, base / 2, base * 2);
     player.setTempo(tempo);
     player.update();
     setRGBFromPitch(player.getPitch());

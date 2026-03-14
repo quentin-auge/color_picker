@@ -1,238 +1,181 @@
 #pragma once
+#include "RTTTLPlayer.h"
 
-#include "pitches.h"
+const char TETRIS_SONG[] =
+  "Tetris:d=4,o=5,b=144:"
+  "e,8b4,8c,d,8c,8b4,"
+  "a4,8a4,8c,e,8d,8c,"
+  "b4.,8c,d,e,"
+  "c,a4,a4,p,"
+  "8p,d,8f,a,8g,8f,"
+  "e.,8c,e,8d,8c,"
+  "b4,8b4,8c,d,e,"
+  "c,a4,a4,p,"
+  "2e,2c,"
+  "2d,2b4,"
+  "2c,2a4,"
+  "1b4,"
+  "2e,2c,"
+  "2d,2b4,"
+  "c,e,2a,"
+  "1g#,"
+  "e,8b4,8c,d,8c,8b4,"
+  "a4,8a4,8c,e,8d,8c,"
+  "b4.,8c,d,e,"
+  "c,a4,a4,p,"
+  "8p,d,8f,a,8g,8f,"
+  "8p,e,8c,e,8d,8c,"
+  "8p,b4,8c,d,e,"
+  "8p,c,8a4,a4,p";
 
-const int tetrisMelody[] = {
-  NOTE_E5, 4,  NOTE_B4, 8,  NOTE_C5, 8,  NOTE_D5, 4,  NOTE_C5, 8,  NOTE_B4, 8,
-  NOTE_A4, 4,  NOTE_A4, 8,  NOTE_C5, 8,  NOTE_E5, 4,  NOTE_D5, 8,  NOTE_C5, 8,
-  NOTE_B4, -4, NOTE_C5, 8,  NOTE_D5, 4,  NOTE_E5, 4,
-  NOTE_C5, 4,  NOTE_A4, 4,  NOTE_A4, 4,  REST,    4,
+const char MARIO_SONG[] =
+  "Mario:d=4,o=5,b=200:"
+  "p,8g,8f#,8f,d#,8e,"
+  "8p,8g#4,8a4,8c4,8p,8a4,8c,8d,"
+  "p,d#,8p,d.,"
+  "2c,2p,"
+  "8c,c,8c,8p,8c,d,"
+  "8e,c,8a4,2g4,"
+  "8c,c,8c,8p,8c,8d,8e,"
+  "1p,"
+  "8c,c,8c,8p,8c,d,"
+  "8e,c,8a4,2g4,"
+  "8e,8e,8p,8e,8p,8c,e,"
+  "g,p,g4,p,"
+  "c.,8g4,p,e4.,"
+  "a4,b4,8a#4,a4,"
+  "g4.,e.,g.,a,8f,8g,"
+  "8p,e,8c,8d,b4.,"
+  "c.,8g4,p,e4.,"
+  "a4,b4,8a#4,a4,"
+  "g4.,e.,g.,a,8f,8g,"
+  "8p,e,8c,8d,b4.,"
+  "8e,c,8g4,p,g#4,"
+  "8a4,f,8f,2a4,"
+  "d.,a.,a.,a.,g.,f.,"
+  "8e,c,8a4,2g4,"
+  "8e,c,8g4,p,g#4,"
+  "8a4,f,8f,2a4,"
+  "8b4,f,8f,f.,e.,d.,"
+  "8c,e4,8e4,2c4";
 
-  REST,    8,  NOTE_D5, 4,  NOTE_F5, 8,  NOTE_A5, 4,  NOTE_G5, 8,  NOTE_F5, 8,
-  NOTE_E5, -4, NOTE_C5, 8,  NOTE_E5, 4,  NOTE_D5, 8,  NOTE_C5, 8,
-  NOTE_B4, 4,  NOTE_B4, 8,  NOTE_C5, 8,  NOTE_D5, 4,  NOTE_E5, 4,
-  NOTE_C5, 4,  NOTE_A4, 4,  NOTE_A4, 4,  REST,    4,
+const char ZELDA_SONG[] =
+  "Zelda:d=4,o=5,b=88:"
+  "a#4,f4.,8a#4,16a#4,16c,16d,16d#,"
+  "2f,8f,8f,8f,16f#,16g#,"
+  "a#..,8a#,8a#,8g#,16f#,"
+  "g#.,16f#,2f,f,"
+  "d#.,16f,2f#,8f,8d#,"
+  "c#.,16d#,2f,8d#,8c#,"
+  "c.,16d,2e,8g,"
+  "16f,16f4,16f4,16f4,16f4,16f4,16f4,16f4,8f4,16f4,8f4,"
+  "a#4,f4.,8a#4,16a#4,16c,16d,16d#,"
+  "2f,8f,8f,8f,16f#,16g#,"
+  "a#..,c6,"
+  "c6,2a,f,"
+  "f#..,a#,"
+  "a,2f,f,"
+  "f#..,a#,"
+  "a,2f,d,"
+  "d#..,f#,"
+  "f,2c#,a#4,"
+  "c.,16d,2e,8g,"
+  "16f,16f4,16f4,16f4,16f4,16f4,16f4,16f4,8f4,16f4,8f4";
 
-  NOTE_E5, 2,  NOTE_C5, 2,
-  NOTE_D5, 2,  NOTE_B4, 2,
-  NOTE_C5, 2,  NOTE_A4, 2,
-  NOTE_B4, 1,
+const char STAR_WARS_SONG[] =
+  "StarWars:d=4,o=5,b=108:"
+  "8a#4,8a#4,8a#4,"
+  "2f,2c6,"
+  "8a#,8a,8g,2f6,c6,"
+  "8a#,8a,8g,2f6,c6,"
+  "8a#,8a,8a#,2g,8c,8c,8c,"
+  "2f,2c6,"
+  "8a#,8a,8g,2f6,c6,"
+  "8a#,8a,8g,2f6,c6,"
+  "8a#,8a,8a#,2g,c.,16c,"
+  "d.,8d,8a#,8a,8g,8f,"
+  "8f,8g,8a,g,8d,e,c.,16c,"
+  "d.,8d,8a#,8a,8g,8f,"
+  "c6.,16g,2g,8p,8c,"
+  "d.,8d,8a#,8a,8g,8f,"
+  "8f,8g,8a,g,8d,e,c6.,16c6,"
+  "f6,8d#6,c#6,8c6,a#,8g#,g,8f,"
+  "1c6";
 
-  NOTE_E5, 2,  NOTE_C5, 2,
-  NOTE_D5, 2,  NOTE_B4, 2,
-  NOTE_C5, 4,  NOTE_E5, 4,  NOTE_A5, 2,
-  NOTE_GS5,1,
+const char BIRTHDAY_SONG[] =
+  "Birthday:d=4,o=4,b=140:"
+  "c,8c,"
+  "d.,c.,f.,"
+  "e..,c,8c,"
+  "d.,c.,g.,"
+  "f..,c,8c,"
+  "c5.,a.,f.,"
+  "e.,d.,a#,8a#,"
+  "a.,f.,g.,"
+  "f..";
 
-  NOTE_E5, 4,  NOTE_B4, 8,  NOTE_C5, 8,  NOTE_D5, 4,  NOTE_C5, 8,  NOTE_B4, 8,
-  NOTE_A4, 4,  NOTE_A4, 8,  NOTE_C5, 8,  NOTE_E5, 4,  NOTE_D5, 8,  NOTE_C5, 8,
-  NOTE_B4, -4, NOTE_C5, 8,  NOTE_D5, 4,  NOTE_E5, 4,
-  NOTE_C5, 4,  NOTE_A4, 4,  NOTE_A4, 4,  REST,    4,
+const char CHRISTMAS_SONG[] =
+  "Christmas:d=4,o=5,b=140:"
+  "c,"
+  "f,8f,8g,8f,8e,"
+  "d,d,d,"
+  "g,8g,8a,8g,8f,"
+  "e,c,c,"
+  "a,8a,8a#,8a,8g,"
+  "f,d,8c,8c,"
+  "d,g,e,"
+  "2f,c,"
+  "f,8f,8g,8f,8e,"
+  "d,d,d,"
+  "g,8g,8a,8g,8f,"
+  "e,c,c,"
+  "a,8a,8a#,8a,8g,"
+  "f,d,8c,8c,"
+  "d,g,e,"
+  "2f,c,"
+  "f,f,f,"
+  "2e,e,"
+  "f,e,d,"
+  "2c,a,"
+  "a#,a,g,"
+  "c6,c,8c,8c,"
+  "d,g,e,"
+  "2f,c,"
+  "f,8f,8g,8f,8e,"
+  "d,d,d,"
+  "g,8g,8a,8g,8f,"
+  "e,c,c,"
+  "a,8a,8a#,8a,8g,"
+  "f,d,8c,8c,"
+  "d,g,e,"
+  "2f,c,"
+  "f,f,f,"
+  "2e,e,"
+  "f,e,d,"
+  "2c,a,"
+  "a#,a,g,"
+  "c6,c,8c,8c,"
+  "d,g,e,"
+  "2f,c,"
+  "f,8f,8g,8f,8e,"
+  "d,d,d,"
+  "g,8g,8a,8g,8f,"
+  "e,c,c,"
+  "a,8a,8a#,8a,8g,"
+  "f,d,8c,8c,"
+  "d,g,e,"
+  "2f,c,"
+  "f,8f,8g,8f,8e,"
+  "d,d,d,"
+  "g,8g,8a,8g,8f,"
+  "e,c,c,"
+  "a,8a,8a#,8a,8g,"
+  "f,d,8c,8c,"
+  "d,g,e,"
+  "2f,p";
 
-  REST,    8,  NOTE_D5, 4,  NOTE_F5, 8,  NOTE_A5, 4,  NOTE_G5, 8,  NOTE_F5, 8,
-  REST,    8,  NOTE_E5, 4,  NOTE_C5, 8,  NOTE_E5, 4,  NOTE_D5, 8,  NOTE_C5, 8,
-  REST,    8,  NOTE_B4, 4,  NOTE_C5, 8,  NOTE_D5, 4,  NOTE_E5, 4,
-  REST,    8,  NOTE_C5, 4,  NOTE_A4, 8,  NOTE_A4, 4,  REST,    4,
+const Song ALL_SONGS[] = {
+  TETRIS_SONG, MARIO_SONG, ZELDA_SONG,
+  STAR_WARS_SONG, BIRTHDAY_SONG, CHRISTMAS_SONG
 };
-
-const Song TETRIS_SONG = {
-  tetrisMelody,
-  sizeof(tetrisMelody) / sizeof(tetrisMelody[0]),
-  144
-};
-
-const int marioMelody[] = {
-  REST,4, NOTE_G5,8, NOTE_FS5,8, NOTE_F5,8, NOTE_DS5,4, NOTE_E5,8,//repeats from 7
-  REST,8, NOTE_GS4,8, NOTE_A4,8, NOTE_C4,8, REST,8, NOTE_A4,8, NOTE_C5,8, NOTE_D5,8,
-  REST,4, NOTE_DS5,4, REST,8, NOTE_D5,-4,
-  NOTE_C5,2, REST,2,
-
-  NOTE_C5,8, NOTE_C5,4, NOTE_C5,8, REST,8, NOTE_C5,8, NOTE_D5,4,//11
-  NOTE_E5,8, NOTE_C5,4, NOTE_A4,8, NOTE_G4,2,
-
-  NOTE_C5,8, NOTE_C5,4, NOTE_C5,8, REST,8, NOTE_C5,8, NOTE_D5,8, NOTE_E5,8,//13
-  REST,1, 
-  NOTE_C5,8, NOTE_C5,4, NOTE_C5,8, REST,8, NOTE_C5,8, NOTE_D5,4,
-  NOTE_E5,8, NOTE_C5,4, NOTE_A4,8, NOTE_G4,2,
-  NOTE_E5,8, NOTE_E5,8, REST,8, NOTE_E5,8, REST,8, NOTE_C5,8, NOTE_E5,4,
-  NOTE_G5,4, REST,4, NOTE_G4,4, REST,4, 
-  NOTE_C5,-4, NOTE_G4,8, REST,4, NOTE_E4,-4, // 19
-  
-  NOTE_A4,4, NOTE_B4,4, NOTE_AS4,8, NOTE_A4,4,
-  NOTE_G4,-8, NOTE_E5,-8, NOTE_G5,-8, NOTE_A5,4, NOTE_F5,8, NOTE_G5,8,
-  REST,8, NOTE_E5,4, NOTE_C5,8, NOTE_D5,8, NOTE_B4,-4,
-
-  NOTE_C5,-4, NOTE_G4,8, REST,4, NOTE_E4,-4, // repeats from 19
-  NOTE_A4,4, NOTE_B4,4, NOTE_AS4,8, NOTE_A4,4,
-  NOTE_G4,-8, NOTE_E5,-8, NOTE_G5,-8, NOTE_A5,4, NOTE_F5,8, NOTE_G5,8,
-  REST,8, NOTE_E5,4, NOTE_C5,8, NOTE_D5,8, NOTE_B4,-4,
-
-  NOTE_E5,8, NOTE_C5,4, NOTE_G4,8, REST,4, NOTE_GS4,4,//23
-  NOTE_A4,8, NOTE_F5,4, NOTE_F5,8, NOTE_A4,2,
-  NOTE_D5,-8, NOTE_A5,-8, NOTE_A5,-8, NOTE_A5,-8, NOTE_G5,-8, NOTE_F5,-8,
-  
-  NOTE_E5,8, NOTE_C5,4, NOTE_A4,8, NOTE_G4,2, //26
-  NOTE_E5,8, NOTE_C5,4, NOTE_G4,8, REST,4, NOTE_GS4,4,
-  NOTE_A4,8, NOTE_F5,4, NOTE_F5,8, NOTE_A4,2,
-  NOTE_B4,8, NOTE_F5,4, NOTE_F5,8, NOTE_F5,-8, NOTE_E5,-8, NOTE_D5,-8,
-  NOTE_C5,8, NOTE_E4,4, NOTE_E4,8, NOTE_C4,2
-};
-
-const Song MARIO_SONG = {
-  marioMelody,
-  sizeof(marioMelody) / sizeof(marioMelody[0]),
-  200
-};
-
-const int zeldaMelody[] = {
-  NOTE_AS4,4,  NOTE_F4,-4,  NOTE_AS4,8,  NOTE_AS4,16,  NOTE_C5,16, NOTE_D5,16, NOTE_DS5,16,//7
-  NOTE_F5,2,  NOTE_F5,8,  NOTE_F5,8,  NOTE_F5,8,  NOTE_FS5,16, NOTE_GS5,16,
-  NOTE_AS5,-2,  NOTE_AS5,8,  NOTE_AS5,8,  NOTE_GS5,8,  NOTE_FS5,16,
-  NOTE_GS5,-8,  NOTE_FS5,16,  NOTE_F5,2,  NOTE_F5,4, 
-
-  NOTE_DS5,-8, NOTE_F5,16, NOTE_FS5,2, NOTE_F5,8, NOTE_DS5,8, //11
-  NOTE_CS5,-8, NOTE_DS5,16, NOTE_F5,2, NOTE_DS5,8, NOTE_CS5,8,
-  NOTE_C5,-8, NOTE_D5,16, NOTE_E5,2, NOTE_G5,8, 
-  NOTE_F5,16, NOTE_F4,16, NOTE_F4,16, NOTE_F4,16,NOTE_F4,16,NOTE_F4,16,NOTE_F4,16,NOTE_F4,16,NOTE_F4,8, NOTE_F4,16,NOTE_F4,8,
-
-  NOTE_AS4,4,  NOTE_F4,-4,  NOTE_AS4,8,  NOTE_AS4,16,  NOTE_C5,16, NOTE_D5,16, NOTE_DS5,16,//15
-  NOTE_F5,2,  NOTE_F5,8,  NOTE_F5,8,  NOTE_F5,8,  NOTE_FS5,16, NOTE_GS5,16,
-  NOTE_AS5,-2, NOTE_CS6,4,
-  NOTE_C6,4, NOTE_A5,2, NOTE_F5,4,
-  NOTE_FS5,-2, NOTE_AS5,4,
-  NOTE_A5,4, NOTE_F5,2, NOTE_F5,4,
-
-  NOTE_FS5,-2, NOTE_AS5,4,
-  NOTE_A5,4, NOTE_F5,2, NOTE_D5,4,
-  NOTE_DS5,-2, NOTE_FS5,4,
-  NOTE_F5,4, NOTE_CS5,2, NOTE_AS4,4,
-  NOTE_C5,-8, NOTE_D5,16, NOTE_E5,2, NOTE_G5,8, 
-  NOTE_F5,16, NOTE_F4,16, NOTE_F4,16, NOTE_F4,16,NOTE_F4,16,NOTE_F4,16,NOTE_F4,16,NOTE_F4,16,NOTE_F4,8, NOTE_F4,16,NOTE_F4,8
-};
-
-const Song ZELDA_SONG = {
-  zeldaMelody,
-  sizeof(zeldaMelody) / sizeof(zeldaMelody[0]),
-  88
-};
-
-const int starWarsMelody[] = {
-  NOTE_AS4,8, NOTE_AS4,8, NOTE_AS4,8,//1
-  NOTE_F5,2, NOTE_C6,2,
-  NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F6,2, NOTE_C6,4,  
-  NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F6,2, NOTE_C6,4,  
-  NOTE_AS5,8, NOTE_A5,8, NOTE_AS5,8, NOTE_G5,2, NOTE_C5,8, NOTE_C5,8, NOTE_C5,8,
-  NOTE_F5,2, NOTE_C6,2,
-  NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F6,2, NOTE_C6,4,  
-  
-  NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F6,2, NOTE_C6,4, //8  
-  NOTE_AS5,8, NOTE_A5,8, NOTE_AS5,8, NOTE_G5,2, NOTE_C5,-8, NOTE_C5,16, 
-  NOTE_D5,-4, NOTE_D5,8, NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F5,8,
-  NOTE_F5,8, NOTE_G5,8, NOTE_A5,8, NOTE_G5,4, NOTE_D5,8, NOTE_E5,4,NOTE_C5,-8, NOTE_C5,16,
-  NOTE_D5,-4, NOTE_D5,8, NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F5,8,
-  
-  NOTE_C6,-8, NOTE_G5,16, NOTE_G5,2, REST,8, NOTE_C5,8,//13
-  NOTE_D5,-4, NOTE_D5,8, NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F5,8,
-  NOTE_F5,8, NOTE_G5,8, NOTE_A5,8, NOTE_G5,4, NOTE_D5,8, NOTE_E5,4,NOTE_C6,-8, NOTE_C6,16,
-  NOTE_F6,4, NOTE_DS6,8, NOTE_CS6,4, NOTE_C6,8, NOTE_AS5,4, NOTE_GS5,8, NOTE_G5,4, NOTE_F5,8,
-  NOTE_C6,1
-};
-
-const Song STAR_WARS_SONG = {
-  starWarsMelody,
-  sizeof(starWarsMelody) / sizeof(starWarsMelody[0]),
-  108
-};
-
-const int birthdayMelody[] = {
-  NOTE_C4,4, NOTE_C4,8, 
-  NOTE_D4,-4, NOTE_C4,-4, NOTE_F4,-4,
-  NOTE_E4,-2, NOTE_C4,4, NOTE_C4,8, 
-  NOTE_D4,-4, NOTE_C4,-4, NOTE_G4,-4,
-  NOTE_F4,-2, NOTE_C4,4, NOTE_C4,8,
-
-  NOTE_C5,-4, NOTE_A4,-4, NOTE_F4,-4, 
-  NOTE_E4,-4, NOTE_D4,-4, NOTE_AS4,4, NOTE_AS4,8,
-  NOTE_A4,-4, NOTE_F4,-4, NOTE_G4,-4,
-  NOTE_F4,-2,
-};
-
-const Song BIRTHDAY_SONG = {
-  birthdayMelody,
-  sizeof(birthdayMelody) / sizeof(birthdayMelody[0]),
-  140
-};
-
-const int christmasMelody[] = {
-  NOTE_C5,4, //1
-  NOTE_F5,4, NOTE_F5,8, NOTE_G5,8, NOTE_F5,8, NOTE_E5,8,
-  NOTE_D5,4, NOTE_D5,4, NOTE_D5,4,
-  NOTE_G5,4, NOTE_G5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F5,8,
-  NOTE_E5,4, NOTE_C5,4, NOTE_C5,4,
-  NOTE_A5,4, NOTE_A5,8, NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8,
-  NOTE_F5,4, NOTE_D5,4, NOTE_C5,8, NOTE_C5,8,
-  NOTE_D5,4, NOTE_G5,4, NOTE_E5,4,
-
-  NOTE_F5,2, NOTE_C5,4, //8 
-  NOTE_F5,4, NOTE_F5,8, NOTE_G5,8, NOTE_F5,8, NOTE_E5,8,
-  NOTE_D5,4, NOTE_D5,4, NOTE_D5,4,
-  NOTE_G5,4, NOTE_G5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F5,8,
-  NOTE_E5,4, NOTE_C5,4, NOTE_C5,4,
-  NOTE_A5,4, NOTE_A5,8, NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8,
-  NOTE_F5,4, NOTE_D5,4, NOTE_C5,8, NOTE_C5,8,
-  NOTE_D5,4, NOTE_G5,4, NOTE_E5,4,
-  NOTE_F5,2, NOTE_C5,4,
-
-  NOTE_F5,4, NOTE_F5,4, NOTE_F5,4,//17
-  NOTE_E5,2, NOTE_E5,4,
-  NOTE_F5,4, NOTE_E5,4, NOTE_D5,4,
-  NOTE_C5,2, NOTE_A5,4,
-  NOTE_AS5,4, NOTE_A5,4, NOTE_G5,4,
-  NOTE_C6,4, NOTE_C5,4, NOTE_C5,8, NOTE_C5,8,
-  NOTE_D5,4, NOTE_G5,4, NOTE_E5,4,
-  NOTE_F5,2, NOTE_C5,4, 
-  NOTE_F5,4, NOTE_F5,8, NOTE_G5,8, NOTE_F5,8, NOTE_E5,8,
-  NOTE_D5,4, NOTE_D5,4, NOTE_D5,4,
-  
-  NOTE_G5,4, NOTE_G5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F5,8, //27
-  NOTE_E5,4, NOTE_C5,4, NOTE_C5,4,
-  NOTE_A5,4, NOTE_A5,8, NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8,
-  NOTE_F5,4, NOTE_D5,4, NOTE_C5,8, NOTE_C5,8,
-  NOTE_D5,4, NOTE_G5,4, NOTE_E5,4,
-  NOTE_F5,2, NOTE_C5,4,
-  NOTE_F5,4, NOTE_F5,4, NOTE_F5,4,
-  NOTE_E5,2, NOTE_E5,4,
-  NOTE_F5,4, NOTE_E5,4, NOTE_D5,4,
-  
-  NOTE_C5,2, NOTE_A5,4,//36
-  NOTE_AS5,4, NOTE_A5,4, NOTE_G5,4,
-  NOTE_C6,4, NOTE_C5,4, NOTE_C5,8, NOTE_C5,8,
-  NOTE_D5,4, NOTE_G5,4, NOTE_E5,4,
-  NOTE_F5,2, NOTE_C5,4, 
-  NOTE_F5,4, NOTE_F5,8, NOTE_G5,8, NOTE_F5,8, NOTE_E5,8,
-  NOTE_D5,4, NOTE_D5,4, NOTE_D5,4,
-  NOTE_G5,4, NOTE_G5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F5,8, 
-  NOTE_E5,4, NOTE_C5,4, NOTE_C5,4,
-  
-  NOTE_A5,4, NOTE_A5,8, NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8,//45
-  NOTE_F5,4, NOTE_D5,4, NOTE_C5,8, NOTE_C5,8,
-  NOTE_D5,4, NOTE_G5,4, NOTE_E5,4,
-  NOTE_F5,2, NOTE_C5,4,
-  NOTE_F5,4, NOTE_F5,8, NOTE_G5,8, NOTE_F5,8, NOTE_E5,8,
-  NOTE_D5,4, NOTE_D5,4, NOTE_D5,4,
-  NOTE_G5,4, NOTE_G5,8, NOTE_A5,8, NOTE_G5,8, NOTE_F5,8,
-  NOTE_E5,4, NOTE_C5,4, NOTE_C5,4,
-  
-  NOTE_A5,4, NOTE_A5,8, NOTE_AS5,8, NOTE_A5,8, NOTE_G5,8, //53
-  NOTE_F5,4, NOTE_D5,4, NOTE_C5,8, NOTE_C5,8,
-  NOTE_D5,4, NOTE_G5,4, NOTE_E5,4,
-  NOTE_F5,2, REST,4
-};
-
-const Song CHRISTMAS_SONG = {
-  christmasMelody,
-  sizeof(christmasMelody) / sizeof(christmasMelody[0]),
-  140
-};
-
-const Song ALL_SONGS[] = { TETRIS_SONG, MARIO_SONG, ZELDA_SONG, STAR_WARS_SONG, BIRTHDAY_SONG, CHRISTMAS_SONG };
 const int NB_SONGS = sizeof(ALL_SONGS) / sizeof(Song);

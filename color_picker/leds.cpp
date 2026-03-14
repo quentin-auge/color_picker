@@ -1,9 +1,8 @@
 #include "leds.h"
 #include "pins.h"
-#include "pitches.h"
 
 void setRGBFromPitch(int pitch) {
-  if (pitch == REST) {
+  if (pitch == 0) {
     analogWrite(LED_R_PIN, 0);
     analogWrite(LED_G_PIN, 0);
     analogWrite(LED_B_PIN, 0);
