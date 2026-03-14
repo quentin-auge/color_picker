@@ -6,14 +6,15 @@ LedController::LedController()
     _blinkPhase(0), _blinkTime(0)
 {}
 
-int LedController::update(int potentiometerValue, int* tunedBrightness) {
+int LedController::update(int potentiometerValue, int* tunedBrightness, int bleBrightness) {
   int brightness = 0;
 
   if (_on && !_blink) {
     if (_brightnessTuning) {
       *tunedBrightness = map(potentiometerValue, 0, 4095, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
     }
-    brightness = *tunedBrightness;
+    // BLE brightness control takes priority
+    brightness = bleBrightness >= 0 ? bleBrightness : *tunedBrightness;
   }
 
   if (_on && _blink) {
@@ -50,7 +51,9 @@ int LedController::update(int potentiometerValue, int* tunedBrightness) {
     float fadedBlinkPhase = (clamped + 1.0) / 2;
 
     // 4. Apply
-    brightness = *tunedBrightness * fadedBlinkPhase;
+    // BLE brightness control takes priority
+    int baseBrightness = bleBrightness >= 0 ? bleBrightness : *tunedBrightness;
+    brightness = baseBrightness * fadedBlinkPhase;
   }
 
   return brightness;
@@ -71,4 +74,6 @@ void LedController::toggleOnOff() { _on = !_on; }
 void LedController::brightnessTuningOn() { _brightnessTuning = true; }
 void LedController::brightnessTuningOff() { _brightnessTuning = false; }
 
+void LedController::blinkingOn() { _blink = true; }
+void LedController::blinkingOff() { _blink = false; }
 void LedController::toggleBlinking() { _blink = !_blink; }

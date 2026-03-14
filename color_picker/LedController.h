@@ -6,7 +6,7 @@
 class LedController {
 public:
   LedController();
-  int update(int potentiometerValue, int* tunedBrightness);
+  int update(int potentiometerValue, int* tunedBrightness, int bleBrightness);
 
   void syncBlink(unsigned long t);
 
@@ -20,6 +20,8 @@ public:
   void brightnessTuningOn();
   void brightnessTuningOff();
 
+  void blinkingOn();
+  void blinkingOff();
   void toggleBlinking();
 
 private:

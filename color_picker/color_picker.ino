@@ -4,6 +4,7 @@
 #include "Button.h"
 #include "LedController.h"
 #include "leds.h"
+#include "BLEManager.h"
 
 Button rButton(BUTTON_R_PIN);
 Button gButton(BUTTON_G_PIN);
@@ -15,6 +16,8 @@ LedController bLed;
 
 Button backButton(BUTTON_BACK_PIN);
 RTTTLPlayer player(BUZZER_PIN);
+
+BLEManager bleManager;
 
 void setup() {
   Serial.begin(9600);
@@ -33,6 +36,8 @@ void setup() {
 
   analogSetAttenuation(ADC_11db);
 
+  bleManager.setup();
+
   delay(50);
   Serial.println("Connection established!");
 }
@@ -43,8 +48,19 @@ bool wasPlaying = false;
 
 int tunedBrightness = MAX_BRIGHTNESS / 2;
 
+int rBleBrightness = -1;  // Deactivated
+int gBleBrightness = -1;  // Deactivated
+int bBleBrightness = -1;  // Deactivated
+
 void loop() {
   int potentiometerValue = 4095 - analogRead(POTENTIOMETER_PIN);
+
+  if (bleManager.hasColorUpdate()) {
+    rLed.turnOn(); gLed.turnOn(); bLed.turnOn();
+    rBleBrightness = bleManager.getR();
+    gBleBrightness = bleManager.getG();
+    bBleBrightness = bleManager.getB();
+  }
 
   // Handle back button
 
@@ -78,13 +94,20 @@ void loop() {
     player.update();
     setRGBFromPitch(player.getPitch());
   }
-  
+
   if (!player.isPlaying())
   {
-    // Handled RGB LEDs / buttons
+    // Handle RGB LEDs / buttons
     rButton.update();
     gButton.update();
     bButton.update();
+
+    // Turning on all LEDs puts an end to BLE color control
+    if (!rLed.isOn() && !gLed.isOn() && !bLed.isOn()) {
+      rBleBrightness = -1;
+      gBleBrightness = -1;
+      bBleBrightness = -1;
+    }
 
     // No LED blinking -> brightness tuning
     if (!rLed.isBlinking() && !gLed.isBlinking() && !bLed.isBlinking()) {
@@ -117,14 +140,14 @@ void loop() {
     }
 
     // Button press when blinking -> off
-    if (rButton.isShortPress() && rLed.isBlinking()) { rLed.toggleBlinking(); rLed.turnOff(); }
-    if (gButton.isShortPress() && gLed.isBlinking()) { gLed.toggleBlinking(); gLed.turnOff(); }
-    if (bButton.isShortPress() && bLed.isBlinking()) { bLed.toggleBlinking(); bLed.turnOff(); }
+    if (rButton.isShortPress() && rLed.isBlinking()) { rLed.blinkingOff(); rLed.turnOff(); }
+    if (gButton.isShortPress() && gLed.isBlinking()) { gLed.blinkingOff(); gLed.turnOff(); }
+    if (bButton.isShortPress() && bLed.isBlinking()) { bLed.blinkingOff(); bLed.turnOff(); }
 
     // Update LEDs brightness
-    int rBrightness = rLed.update(potentiometerValue, &tunedBrightness);
-    int gBrightness = gLed.update(potentiometerValue, &tunedBrightness);
-    int bBrightness = bLed.update(potentiometerValue, &tunedBrightness);
+    int rBrightness = rLed.update(potentiometerValue, &tunedBrightness, rBleBrightness);
+    int gBrightness = gLed.update(potentiometerValue, &tunedBrightness, gBleBrightness);
+    int bBrightness = bLed.update(potentiometerValue, &tunedBrightness, bBleBrightness);
 
     // Light LEDs
     analogWrite(LED_R_PIN, rBrightness);
