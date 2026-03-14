@@ -60,6 +60,12 @@ void loop() {
     rBleBrightness = bleManager.getR();
     gBleBrightness = bleManager.getG();
     bBleBrightness = bleManager.getB();
+    // Disallow all LEDs to be off at once, or it becomes difficult to reset
+    if (rBleBrightness == 0 && gBleBrightness == 0 && bBleBrightness == 0) {
+      rBleBrightness = MIN_BRIGHTNESS;
+      gBleBrightness = MIN_BRIGHTNESS;
+      bBleBrightness = MIN_BRIGHTNESS;
+    }
   }
 
   // Handle back button
@@ -102,11 +108,13 @@ void loop() {
     gButton.update();
     bButton.update();
 
-    // Turning on all LEDs puts an end to BLE color control
-    if (!rLed.isOn() && !gLed.isOn() && !bLed.isOn()) {
-      rBleBrightness = -1;
-      gBleBrightness = -1;
-      bBleBrightness = -1;
+    // Turning of all LEDs puts an end to BLE color control.
+    // It is not possible to have all LEDs at 0 at once here so there is no mistakenly disabling.
+    if ((!rLed.isOn() || rBleBrightness == 0) &&
+        (!gLed.isOn() || gBleBrightness == 0) &&
+        (!bLed.isOn() || bBleBrightness == 0)) {
+      rLed.turnOff(); gLed.turnOff(); bLed.turnOff();
+      rBleBrightness = -1; gBleBrightness = -1; bBleBrightness = -1;
     }
 
     // No LED blinking -> brightness tuning
