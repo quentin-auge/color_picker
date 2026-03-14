@@ -12,7 +12,7 @@ void setRGBFromPitch(int pitch) {
   // Constrain the range to avoid glitchy colors
   // 131Hz (C3) to 1047Hz (C6) covers most melodies
   int hue = map(constrain(pitch, 131, 1047), 131, 1047, 0, MAX_BRIGHTNESS);
-  
+
   // Hue -> RGB
   int r, g, b;
   if (hue < 85) {

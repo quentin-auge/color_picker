@@ -15,7 +15,7 @@ int LedController::update(int potentiometerValue, int* tunedBrightness) {
     }
     brightness = *tunedBrightness;
   }
-  
+
   if (_on && _blink) {
     // Tune blinking
 
@@ -44,7 +44,7 @@ int LedController::update(int potentiometerValue, int* tunedBrightness) {
     // then shift it back and constrain it.
     float rawSine = sin(_blinkPhase);
     float stretched = rawSine * sharpness;
-    
+
     // Constrain to -1.0 to 1.0, then map to 0-1
     float clamped = constrain(stretched, -1.0, 1.0);
     float fadedBlinkPhase = (clamped + 1.0) / 2;
