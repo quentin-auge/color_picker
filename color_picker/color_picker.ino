@@ -118,7 +118,7 @@ void loop() {
   {
     // Handle tempo tuning with potentiometer
     int base = player.getBaseTempo();
-    int tempo = map(potentiometerValue, 0, 4095, base / 2, base * 2);
+    int tempo = map(potentiometerValue, 0, 4095, base * 2 / 3, base * 2);
     player.setTempo(tempo);
     player.update();
     setRGBFromPitch(player.getPitch());
