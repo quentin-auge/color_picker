@@ -76,12 +76,18 @@ void loop() {
     strncpy(bleRtttlBuffer, rtttl, sizeof(bleRtttlBuffer) - 1);
     bleRtttlBuffer[sizeof(bleRtttlBuffer) - 1] = '\0';
     hasBleRtttl = true;
-    Serial.println("Received RTTTL from BLE, will play");
+    Serial.println("Received RTTTL from BLE");
   }
 
   if (hasBleRtttl) {
-    player.stop();
-    player.play(bleRtttlBuffer);
+    if (bleRtttlBuffer[0] == '\0') {
+      player.stop();
+      Serial.println("Stopping playback");
+    } else {
+      player.stop();
+      player.play(bleRtttlBuffer);
+      Serial.println("Playing RTTTL from BLE");
+    }
     hasBleRtttl = false;
   }
 

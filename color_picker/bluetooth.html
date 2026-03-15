@@ -123,7 +123,10 @@
             <h2>RTTTL Player</h2>
             <div class="card-content">
                 <textarea id="rtttlInput" placeholder="Enter RTTTL string..." disabled></textarea>
-                <button class="btn" id="playRtttlBtn" disabled>Play</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn" id="playRtttlBtn" disabled>Play</button>
+                    <button class="btn" id="stopRtttlBtn" disabled>Stop</button>
+                </div>
             </div>
         </div>
     </div>
@@ -143,6 +146,7 @@
         const statusText = document.getElementById('status');
         const rtttlInput = document.getElementById('rtttlInput');
         const playRtttlBtn = document.getElementById('playRtttlBtn');
+        const stopRtttlBtn = document.getElementById('stopRtttlBtn');
 
         function setStatus(message) {
             statusText.innerText = message;
@@ -169,6 +173,7 @@
             colorPicker.disabled = true;
             rtttlInput.disabled = true;
             playRtttlBtn.disabled = true;
+            stopRtttlBtn.disabled = true;
             connectBtn.style.display = "inline-block";
             disconnectBtn.style.display = "none";
             device = null;
@@ -198,9 +203,6 @@
         function sendRtttl() {
             try {
                 const rtttl = rtttlInput.value.trim();
-                if (rtttl.length === 0) {
-                    return;
-                }
                 if (rtttl.length > RTTTL_MAX_LENGTH) {
                     throw new Error("RTTTL too long (max " + RTTTL_MAX_LENGTH + " chars)");
                 }
@@ -213,6 +215,15 @@
             } catch (error) {
                 console.log(error);
                 setErrorStatus(error);
+            }
+        }
+
+        function stopRtttl() {
+            if (rtttlCharacteristic) {
+                const encoder = new TextEncoder();
+                const data = encoder.encode("");
+                rtttlCharacteristic.writeValue(data);
+                setStatus("Connected");
             }
         }
 
@@ -235,6 +246,7 @@
                 colorPicker.disabled = false;
                 rtttlInput.disabled = false;
                 playRtttlBtn.disabled = false;
+                stopRtttlBtn.disabled = false;
                 connectBtn.style.display = "none";
                 disconnectBtn.style.display = "inline-block";
 
@@ -256,6 +268,7 @@
 
         colorPicker.oninput = sendColor;
         playRtttlBtn.onclick = sendRtttl;
+        stopRtttlBtn.onclick = stopRtttl;
     </script>
 </body>
 </html>

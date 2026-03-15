@@ -94,7 +94,7 @@ BLEManager::RtttlCallbacks::RtttlCallbacks() {}
 
 void BLEManager::RtttlCallbacks::onWrite(BLECharacteristic* pCharacteristic) {
     String value = pCharacteristic->getValue();
-    if (value.length() > 0 && value.length() <= RTTTL_BUFFER_SIZE) {
+    if (value.length() <= RTTTL_BUFFER_SIZE) {
         memset(_rtttlBuffer, 0, sizeof(_rtttlBuffer));
         for (size_t i = 0; i < value.length(); i++) {
             _rtttlBuffer[i] = value[i];
