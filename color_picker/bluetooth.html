@@ -43,6 +43,7 @@
         const RTTTL_MAX_LENGTH = 512;
 
         let device, server, characteristic, rtttlCharacteristic;
+        let connectionCheckInterval = null;
 
         const connectBtn = document.getElementById('connectBtn');
         const disconnectBtn = document.getElementById('disconnectBtn');
@@ -51,7 +52,17 @@
         const rtttlInput = document.getElementById('rtttlInput');
         const playRtttlBtn = document.getElementById('playRtttlBtn');
 
+        function checkConnection() {
+            if (device && !device.gatt.connected) {
+                handleDisconnect();
+            }
+        }
+
         function handleDisconnect() {
+            if (connectionCheckInterval) {
+                clearInterval(connectionCheckInterval);
+                connectionCheckInterval = null;
+            }
             statusText.innerText = "Status: Disconnected";
             colorPicker.disabled = true;
             rtttlInput.disabled = true;
@@ -122,6 +133,8 @@
                 playRtttlBtn.disabled = false;
                 connectBtn.style.display = "none";
                 disconnectBtn.style.display = "inline-block";
+
+                connectionCheckInterval = setInterval(checkConnection, 1000);
 
                 sendColor();
             } catch (error) {
