@@ -8,11 +8,19 @@ void BLEManager::setup() {
     pService = pServer->createService(BLE_SERVICE_UUID);
 
     pRgbCharacteristic = pService->createCharacteristic(
-        BLE_CHARACTERISTIC_UUID,
-        BLECharacteristic::PROPERTY_WRITE
+        BLE_RGB_CHARACTERISTIC_UUID,
+        BLECharacteristic::PROPERTY_WRITE_NR
     );
     pRgbCallbacks = new RgbCallbacks();
     pRgbCharacteristic->setCallbacks(pRgbCallbacks);
+
+    pRtttlCharacteristic = pService->createCharacteristic(
+        BLE_RTTTL_CHARACTERISTIC_UUID,
+        BLECharacteristic::PROPERTY_WRITE_NR
+    );
+    pRtttlCallbacks = new RtttlCallbacks();
+    pRtttlCharacteristic->setCallbacks(pRtttlCallbacks);
+
     pService->start();
 
     BLEAdvertising* pAdvertising = BLEDevice::getAdvertising();
@@ -40,6 +48,14 @@ uint8_t BLEManager::getG() {
 
 uint8_t BLEManager::getB() {
     return pRgbCallbacks->getColor() & 0xFF;
+}
+
+bool BLEManager::hasRtttlUpdate() {
+    return pRtttlCallbacks->hasUpdate();
+}
+
+const char* BLEManager::getRtttl() {
+    return pRtttlCallbacks->getRtttl();
 }
 
 void BLEManager::ServerCallbacks::onConnect(BLEServer* pServer) {
@@ -72,4 +88,31 @@ bool BLEManager::RgbCallbacks::hasUpdate() {
 
 uint32_t BLEManager::RgbCallbacks::getColor() {
     return (_r << 16) | (_g << 8) | _b;
+}
+
+BLEManager::RtttlCallbacks::RtttlCallbacks() {}
+
+void BLEManager::RtttlCallbacks::onWrite(BLECharacteristic* pCharacteristic) {
+    String value = pCharacteristic->getValue();
+    if (value.length() > 0 && value.length() <= RTTTL_BUFFER_SIZE) {
+        memset(_rtttlBuffer, 0, sizeof(_rtttlBuffer));
+        for (size_t i = 0; i < value.length(); i++) {
+            _rtttlBuffer[i] = value[i];
+        }
+        _rtttlBuffer[value.length()] = '\0';
+        _hasUpdate = true;
+        Serial.println("Received RTTTL via BLE");
+    }
+}
+
+bool BLEManager::RtttlCallbacks::hasUpdate() {
+    if (_hasUpdate) {
+        _hasUpdate = false;
+        return true;
+    }
+    return false;
+}
+
+const char* BLEManager::RtttlCallbacks::getRtttl() {
+    return _rtttlBuffer;
 }

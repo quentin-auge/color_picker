@@ -52,6 +52,9 @@ int rBleBrightness = -1;  // Deactivated
 int gBleBrightness = -1;  // Deactivated
 int bBleBrightness = -1;  // Deactivated
 
+bool hasBleRtttl = false;
+char bleRtttlBuffer[RTTTL_BUFFER_SIZE];
+
 void loop() {
   int potentiometerValue = 4095 - analogRead(POTENTIOMETER_PIN);
 
@@ -66,6 +69,20 @@ void loop() {
       gBleBrightness = MIN_BRIGHTNESS;
       bBleBrightness = MIN_BRIGHTNESS;
     }
+  }
+
+  if (bleManager.hasRtttlUpdate()) {
+    const char* rtttl = bleManager.getRtttl();
+    strncpy(bleRtttlBuffer, rtttl, sizeof(bleRtttlBuffer) - 1);
+    bleRtttlBuffer[sizeof(bleRtttlBuffer) - 1] = '\0';
+    hasBleRtttl = true;
+    Serial.println("Received RTTTL from BLE, will play");
+  }
+
+  if (hasBleRtttl) {
+    player.stop();
+    player.play(bleRtttlBuffer);
+    hasBleRtttl = false;
   }
 
   // Handle back button
