@@ -1,39 +1,131 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Robot RGB Control</title>
+    <title>Color Picker & RTTTL</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: sans-serif; text-align: center; background: #121212; color: white; padding-top: 50px; }
-        .card { background: #1e1e1e; border-radius: 20px; padding: 30px; display: inline-block; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 { color: #00adb5; }
-        #colorPicker { width: 150px; height: 150px; border: none; cursor: pointer; background: none; }
-        .btn { background: #00adb5; border: none; color: white; padding: 15px 32px; border-radius: 10px; font-size: 16px; margin: 20px; cursor: pointer; transition: 0.3s; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: sans-serif;
+            background: #121212;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: #1e1e1e;
+        }
+        .header h1 { color: #00adb5; margin-bottom: 10px; }
+        .connect-btn {
+            background: #00adb5; border: none; color: white;
+            padding: 12px 30px; border-radius: 25px; font-size: 16px;
+            cursor: pointer; transition: 0.3s;
+        }
+        .connect-btn:hover { background: #007d82; }
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .status {
+            font-size: 0.9em;
+            margin-top: 15px;
+            padding: 5px 12px;
+            border-radius: 5px;
+            color: #888;
+        }
+        .status-error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+        .main {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .card {
+            background: #1e1e1e;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            flex: 1;
+            min-width: 280px;
+            max-width: 400px;
+        }
+        .card h2 {
+            color: #00adb5;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        #colorPicker {
+            width: 150px; height: 150px;
+            border: none; cursor: pointer;
+            background: none;
+        }
+        .btn {
+            background: #00adb5; border: none; color: white;
+            padding: 15px 32px; border-radius: 10px; font-size: 16px;
+            cursor: pointer; transition: 0.3s;
+        }
         .btn:hover { background: #007d82; }
-        .status { margin-top: 20px; font-size: 0.9em; color: #888; }
+        .btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+        }
+        #rtttlInput {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-family: monospace;
+            font-size: 12px;
+            resize: vertical;
+            background: #2a2a2a;
+            color: white;
+        }
+        #rtttlInput::placeholder { color: #666; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>Color Picker</h1>
-        <p>Pick LEDs color:</p>
+    <div class="header">
+        <div class="header-controls">
+            <button class="connect-btn" id="connectBtn">Connect</button>
+            <button class="connect-btn" id="disconnectBtn" style="display: none;">Disconnect</button>
+        </div>
+        <p class="status status-error" id="status">Disconnected</p>
+    </div>
 
-        <input type="color" id="colorPicker" value="#ff0000" disabled>
-        <br>
-        <button class="btn" id="connectBtn">Connect</button>
-        <button class="btn" id="disconnectBtn" style="display: none;">Disconnect</button>
+    <div class="main">
+        <div class="card">
+            <h2>LED Color</h2>
+            <div class="card-content">
+                <input type="color" id="colorPicker" value="#404040" disabled>
+            </div>
+        </div>
 
-        <div class="status" id="status">Status: Disconnected</div>
-
-        <hr style="border-color: #333; margin: 30px 0;">
-
-        <h1 style="font-size: 1.5em;">RTTTL Player</h1>
-        <p>Enter RTTTL ringtone:</p>
-
-        <textarea id="rtttlInput" placeholder="Enter RTTTL string:" style="width: 80%; height: 80px; padding: 10px; border-radius: 5px; border: none; margin-bottom: 10px; font-family: monospace; resize: vertical;" disabled></textarea>
-        <br>
-        <button class="btn" id="playRtttlBtn" disabled>Play</button>
+        <div class="card">
+            <h2>RTTTL Player</h2>
+            <div class="card-content">
+                <textarea id="rtttlInput" placeholder="Enter RTTTL string..." disabled></textarea>
+                <button class="btn" id="playRtttlBtn" disabled>Play</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -52,6 +144,16 @@
         const rtttlInput = document.getElementById('rtttlInput');
         const playRtttlBtn = document.getElementById('playRtttlBtn');
 
+        function setStatus(message) {
+            statusText.innerText = message;
+            statusText.className = "status";
+        }
+
+        function setErrorStatus(message) {
+            statusText.innerText = message;
+            statusText.className = "status status-error";
+        }
+
         function checkConnection() {
             if (device && !device.gatt.connected) {
                 handleDisconnect();
@@ -63,7 +165,7 @@
                 clearInterval(connectionCheckInterval);
                 connectionCheckInterval = null;
             }
-            statusText.innerText = "Status: Disconnected";
+            setErrorStatus("Disconnected");
             colorPicker.disabled = true;
             rtttlInput.disabled = true;
             playRtttlBtn.disabled = true;
@@ -85,9 +187,10 @@
                 try {
                     const data = new Uint8Array([r, g, b]);
                     characteristic.writeValue(data);
+                    setStatus("Connected");
                 } catch (error) {
                     console.log(error);
-                    statusText.innerText = error;
+                    setErrorStatus(error);
                 }
             }
         }
@@ -105,16 +208,17 @@
                     const encoder = new TextEncoder();
                     const data = encoder.encode(rtttl);
                     rtttlCharacteristic.writeValue(data);
+                    setStatus("Connected");
                 }
             } catch (error) {
                 console.log(error);
-                statusText.innerText = error;
+                setErrorStatus(error);
             }
         }
 
         connectBtn.onclick = async () => {
             try {
-                statusText.innerText = "Connecting...";
+                setStatus("Connecting...");
                 device = await navigator.bluetooth.requestDevice({
                     filters: [{ name: "ColorPicker" }],
                     optionalServices: [SERVICE_UUID]
@@ -127,7 +231,7 @@
                 characteristic = await service.getCharacteristic(RGB_CHARACTERISTIC_UUID);
                 rtttlCharacteristic = await service.getCharacteristic(RTTTL_CHARACTERISTIC_UUID);
 
-                statusText.innerText = "Status: Connected";
+                setStatus("Connected");
                 colorPicker.disabled = false;
                 rtttlInput.disabled = false;
                 playRtttlBtn.disabled = false;
@@ -139,7 +243,7 @@
                 sendColor();
             } catch (error) {
                 console.log(error);
-                statusText.innerText = "Error: " + error;
+                setErrorStatus(error);
             }
         };
 
@@ -155,4 +259,3 @@
     </script>
 </body>
 </html>
-
