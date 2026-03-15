@@ -315,12 +315,19 @@
         colorPicker.oninput = sendColor;
         playRtttlBtn.onclick = sendRtttl;
         stopRtttlBtn.onclick = stopRtttl;
-        rtttlInput.oninput = () => {
+        function resizeRtttlInput() {
+            rtttlInput.style.height = 'auto';
+            rtttlInput.style.height = (rtttlInput.scrollHeight + 10) + 'px';
+        }
+
+        rtttlInput.oninput = function() {
             rtttlSelect.value = "";
+            resizeRtttlInput();
         };
         rtttlSelect.onchange = () => {
             if (rtttlSelect.value) {
                 rtttlInput.value = rtttlSelect.value;
+                resizeRtttlInput();
             }
         };
     </script>
