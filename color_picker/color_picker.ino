@@ -4,7 +4,7 @@
 #include "Button.h"
 #include "LedController.h"
 #include "leds.h"
-#include "BLEManager.h"
+// #include "BLEManager.h"
 
 Button rButton(BUTTON_R_PIN);
 Button gButton(BUTTON_G_PIN);
@@ -17,7 +17,7 @@ LedController bLed;
 Button backButton(BUTTON_BACK_PIN);
 RTTTLPlayer player(BUZZER_PIN);
 
-BLEManager bleManager;
+// BLEManager bleManager;
 
 void setup() {
   Serial.begin(9600);
@@ -36,7 +36,7 @@ void setup() {
 
   analogSetAttenuation(ADC_11db);
 
-  bleManager.setup();
+  // bleManager.setup();
 
   delay(50);
   Serial.println("Connection established!");
@@ -48,48 +48,48 @@ bool wasPlaying = false;
 
 int tunedBrightness = MAX_BRIGHTNESS / 2;
 
-int rBleBrightness = -1;  // Deactivated
-int gBleBrightness = -1;  // Deactivated
-int bBleBrightness = -1;  // Deactivated
+// int rBleBrightness = -1;  // Deactivated
+// int gBleBrightness = -1;  // Deactivated
+// int bBleBrightness = -1;  // Deactivated
 
-bool hasBleRtttl = false;
-char bleRtttlBuffer[RTTTL_BUFFER_SIZE];
+// bool hasBleRtttl = false;
+// char bleRtttlBuffer[RTTTL_BUFFER_SIZE];
 
 void loop() {
   int potentiometerValue = 4095 - analogRead(POTENTIOMETER_PIN);
 
-  if (bleManager.hasColorUpdate()) {
-    rLed.turnOn(); gLed.turnOn(); bLed.turnOn();
-    rBleBrightness = bleManager.getR();
-    gBleBrightness = bleManager.getG();
-    bBleBrightness = bleManager.getB();
-    // Disallow all LEDs to be off at once, or it becomes difficult to reset
-    if (rBleBrightness == 0 && gBleBrightness == 0 && bBleBrightness == 0) {
-      rBleBrightness = MIN_BRIGHTNESS;
-      gBleBrightness = MIN_BRIGHTNESS;
-      bBleBrightness = MIN_BRIGHTNESS;
-    }
-  }
+  // if (bleManager.hasColorUpdate()) {
+  //   rLed.turnOn(); gLed.turnOn(); bLed.turnOn();
+  //   rBleBrightness = bleManager.getR();
+  //   gBleBrightness = bleManager.getG();
+  //   bBleBrightness = bleManager.getB();
+  //   // Disallow all LEDs to be off at once, or it becomes difficult to reset
+  //   if (rBleBrightness == 0 && gBleBrightness == 0 && bBleBrightness == 0) {
+  //     rBleBrightness = MIN_BRIGHTNESS;
+  //     gBleBrightness = MIN_BRIGHTNESS;
+  //     bBleBrightness = MIN_BRIGHTNESS;
+  //   }
+  // }
 
-  if (bleManager.hasRtttlUpdate()) {
-    const char* rtttl = bleManager.getRtttl();
-    strncpy(bleRtttlBuffer, rtttl, sizeof(bleRtttlBuffer) - 1);
-    bleRtttlBuffer[sizeof(bleRtttlBuffer) - 1] = '\0';
-    hasBleRtttl = true;
-    Serial.println("Received RTTTL from BLE");
-  }
+  // if (bleManager.hasRtttlUpdate()) {
+  //   const char* rtttl = bleManager.getRtttl();
+  //   strncpy(bleRtttlBuffer, rtttl, sizeof(bleRtttlBuffer) - 1);
+  //   bleRtttlBuffer[sizeof(bleRtttlBuffer) - 1] = '\0';
+  //   hasBleRtttl = true;
+  //   Serial.println("Received RTTTL from BLE");
+  // }
 
-  if (hasBleRtttl) {
-    if (bleRtttlBuffer[0] == '\0') {
-      player.stop();
-      Serial.println("Stopping playback");
-    } else {
-      player.stop();
-      player.play(bleRtttlBuffer);
-      Serial.println("Playing RTTTL from BLE");
-    }
-    hasBleRtttl = false;
-  }
+  // if (hasBleRtttl) {
+  //   if (bleRtttlBuffer[0] == '\0') {
+  //     player.stop();
+  //     Serial.println("Stopping playback");
+  //   } else {
+  //     player.stop();
+  //     player.play(bleRtttlBuffer);
+  //     Serial.println("Playing RTTTL from BLE");
+  //   }
+  //   hasBleRtttl = false;
+  // }
 
   // Handle back button
 
@@ -131,14 +131,14 @@ void loop() {
     gButton.update();
     bButton.update();
 
-    // Turning of all LEDs puts an end to BLE color control.
-    // It is not possible to have all LEDs at 0 at once here so there is no mistakenly disabling.
-    if ((!rLed.isOn() || rBleBrightness == 0) &&
-        (!gLed.isOn() || gBleBrightness == 0) &&
-        (!bLed.isOn() || bBleBrightness == 0)) {
-      rLed.turnOff(); gLed.turnOff(); bLed.turnOff();
-      rBleBrightness = -1; gBleBrightness = -1; bBleBrightness = -1;
-    }
+    // // Turning of all LEDs puts an end to BLE color control.
+    // // It is not possible to have all LEDs at 0 at once here so there is no mistakenly disabling.
+    // if ((!rLed.isOn() || rBleBrightness == 0) &&
+    //     (!gLed.isOn() || gBleBrightness == 0) &&
+    //     (!bLed.isOn() || bBleBrightness == 0)) {
+    //   rLed.turnOff(); gLed.turnOff(); bLed.turnOff();
+    //   rBleBrightness = -1; gBleBrightness = -1; bBleBrightness = -1;
+    // }
 
     // No LED blinking -> brightness tuning
     if (!rLed.isBlinking() && !gLed.isBlinking() && !bLed.isBlinking()) {
