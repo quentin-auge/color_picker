@@ -176,9 +176,9 @@ void loop() {
     if (bButton.isShortPress() && bLed.isBlinking()) { bLed.blinkingOff(); bLed.turnOff(); }
 
     // Update LEDs brightness
-    int rBrightness = rLed.update(potentiometerValue, &tunedBrightness, rBleBrightness);
-    int gBrightness = gLed.update(potentiometerValue, &tunedBrightness, gBleBrightness);
-    int bBrightness = bLed.update(potentiometerValue, &tunedBrightness, bBleBrightness);
+    int rBrightness = rLed.update(potentiometerValue, &tunedBrightness/*, rBleBrightness*/);
+    int gBrightness = gLed.update(potentiometerValue, &tunedBrightness/*, gBleBrightness*/);
+    int bBrightness = bLed.update(potentiometerValue, &tunedBrightness/*, bBleBrightness*/);
 
     // Light LEDs
     analogWrite(LED_R_PIN, rBrightness);
