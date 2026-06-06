@@ -1,2 +1,5 @@
 .DS_Store
 .theia/
+.opencode/*
+!.opencode/commands/
+!.opencode/skills/
